@@ -5,6 +5,5 @@
         <file>LButton.qml</file>
         <file>LInput.qml</file>
         <file>Sector.qml</file>
-        <file>LAction.qml</file>
     </qresource>
 </RCC>

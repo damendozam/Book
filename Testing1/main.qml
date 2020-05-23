@@ -31,11 +31,6 @@ Window {
         visible: false
         //target:lAction
     }
-    LAction{
-        id:lAction
-        visible: false
-        //target:sector
-    }
     /*Component{
         id:loginPage
         Login{}

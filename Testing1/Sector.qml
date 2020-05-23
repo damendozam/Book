@@ -16,21 +16,24 @@ Item {
     property string bookBuffer: ''
     property string chapterBuffer: ''
     property string paragraphBuffer: ''
+    property bool statusChapter: false
+    property bool statusParagraph: false
     property var resultString: '{"action":"","section":{"book":"","chapter":"","paragraph":""}}'
     property var resultJson: JSON.parse(resultString);
     Text{
         id:_title
-        text:"Realizar acción"
+        text:qsTr("Realizar \n acción")
         color:"black"
         width: parent.width
         horizontalAlignment: Text.AlignHCenter
         font.family: "Montserrat Light"
-        font.pointSize: 10
+        font.pointSize: 40
     }
     ColumnLayout{
         id:_columSector
-        //anchors.horizontalCenter: _title.bottom
-        anchors.centerIn: parent
+        anchors.top: _title.bottom
+        anchors.topMargin: 30
+        anchors.horizontalCenter: parent.horizontalCenter
         ComboBox{
             id:comboboxBook
             displayText:"Libro"
@@ -40,15 +43,14 @@ Item {
                 //sendData ("Libro "+comboboxBook.currentText)
                 _action.title="Libro "+comboboxBook.currentText
                 if(comboboxBook.currentText=="Adicionar"){
-                    listChapter.visible=true
+                    statusChapter=true
                     listChapter.model=["Adicionar"]
                 }
                 if(comboboxBook.currentText=="Actualizar"){
-                    listChapter.visible=true
+                    statusChapter=true
+                    //listChapter.visible=true
                     listChapter.model=["Adicionar","Eliminar","Actualizar","Leer"]
                 }
-                //console.log("qqqqqqqqqqqqqqqq")
-                //navigate(lAction)
                 _action.visible=true
                 buttonCancelSend.visible=true
                 buttonSend.visible=true
@@ -59,20 +61,16 @@ Item {
             id:listChapter
             visible: false
             displayText:"Capitulo"
-            //model: ["Adicionar","Eliminar","Actualizar","Leer"]
             onActivated:{
-                //sendData ("Capitulo "+listChapter.currentText)
                 _action.title="Capitulo "+listChapter.currentText
                 if(listChapter.currentText=="Adicionar"){
-                    listParagraph.visible=true
+                    statusParagraph=true
                     listParagraph.model=["Adicionar"]
                 }
                 if(listChapter.currentText=="Actualizar"){
-                    listParagraph.visible=true
+                    statusParagraph=true
                     listParagraph.model=["Adicionar","Eliminar","Actualizar","Leer"]
                 }
-                //console.log("qqqqqqqqqqqqqqqq")
-                //navigate(lAction)
                 _action.visible=true
                 buttonCancelSend.visible=true
                 buttonSend.visible=true
@@ -82,7 +80,6 @@ Item {
             id:listParagraph
             visible: false
             displayText:"Parrafo"
-            //model: ["Adicionar","Eliminar","Actualizar","Leer"]
             onActivated: {
                 textParagraph.visible=true
                 buttonCancelSend.visible=true
@@ -105,6 +102,7 @@ Item {
             id:buttonCancelSend
             Layout.alignment: Qt.AlignHCenter
             text:"Cancelar"
+            visible: false
             onClicked: {
                 //back()
                 buttonCancelSend.visible=false
@@ -115,66 +113,68 @@ Item {
             id:buttonSend
             Layout.alignment: Qt.AlignHCenter
             text:"Aceptar"
+            visible: false
             onClicked: {
-                if(actionList=="Libro Adicionar"){
-                    resultJson.action='/add/book/'
+                if(_action.title=="Libro Adicionar"){
+                    resultJson['action']+='/add/book'
                     bookBuffer=actionList
                 }
-                if(actionList=="Libro Eliminar"){
-                    resultJson.action='/delete/book/'
+                if(_action.title=="Libro Eliminar"){
+                    resultJson['action']+='/delete/book'
                     bookBuffer=actionList
                 }
-                if(actionList=="Libro Actualizar"){
-                    resultJson.action='/upload/book/'
+                if(_action.title=="Libro Actualizar"){
+                    resultJson['action']+='/upload/book'
                     bookBuffer=actionList
                 }
-                if(actionList=="Libro Leer"){
-                    resultJson.action='/select/book/'
+                if(_action.title=="Libro Leer"){
+                    resultJson['action']+='/select/book'
                     bookBuffer=actionList
                 }
 
-                if(actionList=="Capitulo Adicionar"){
-                    resultJson.action='/add/chapter/'
+                if(_action.title=="Capitulo Adicionar"){
+                    resultJson['action']+='/add/chapter'
                     chapterBuffer=actionList
                 }
-                if(actionList=="Capitulo Eliminar"){
-                    resultJson.action='/add/chapter/'
+                if(_action.title=="Capitulo Eliminar"){
+                    resultJson['action']+='/add/chapter'
                     chapterBuffer=actionList
                 }
-                if(actionList=="Capitulo Actualizar"){
-                    resultJson.action='/upload/chapter/'
+                if(_action.title=="Capitulo Actualizar"){
+                    resultJson['action']+='/upload/chapter'
                     chapterBuffer=actionList
                 }
-                if(actionList=="Capitulo Leer"){
-                    resultJson.action='/select/chapter/'
+                if(_action.title=="Capitulo Leer"){
+                    resultJson['action']+='/select/chapter'
                     chapterBuffer=actionList
                 }
 
-                resultJson.section.book=bookBuffer
-                resultJson.section.chapter=actionList
-                //sendResult(resultJson)
-                console.log(resultJson)
-                //back()
+                if(statusChapter){
+                    listChapter.visible=true
+                }
+                if(statusParagraph){
+                    listParagraph.visible=true
+                }
+                resultJson['section']['book']=bookBuffer
+                resultJson['section']['chapter']=actionList
+                resultJson['section']['paragraph']=textParagraph.text
+                _action.visible=false
                 buttonCancelSend.visible=false
                 buttonSend.visible=false
+                _action.text=''
+                //console.log(textParagraph.text.length)
+                if(textParagraph.text.length>0){
+                    console.log(resultJson['section']['paragraph'])
+                    textParagraph.visible=false
+                    listChapter.visible=false
+                    listParagraph.visible=false
+                    textParagraph.text=''
+                    statusChapter=false
+                    statusParagraph=false
+                    resultJson['action']=''
+                }
             }
         }
-        /*LButton{
-            id:buttonCancelSend
-            visible: false
-            text:"Cancelar"
-            onClicked:{
-                back()
-            }
-        }
-        LButton{
-            id:buttonSend
-            visible: false
-            text:"Enviar"
-            onClicked:{
-                //console.log('{"book":'++',"chapter":'++',"paragraph":'++"}")
-            }
-        }*/
     }
 
 }
