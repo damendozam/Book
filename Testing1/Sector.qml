@@ -17,11 +17,12 @@ Item {
     property string paragraphBuffer: ''
     property bool statusChapter: false
     property bool statusParagraph: false
-    property var resultString: '{"action":"","section":{"book":"","chapter":"","paragraph":""}}'
+    property var resultString: '{"action":{"book":"","chapter":"","paragraph":""},"section":{"book":"","chapter":"","paragraph":""}}'
     property var resultJson: JSON.parse(resultString);
     property var stringSplit: ['','']
-    property var stringActions: '{"Adicionar":"add","Eliminar":"delete","Actualizar":"upload","Leer":"select","Libro":"book","Capitulo":"chapter"}'
+    property var stringActions: '{"Adicionar":"add","Eliminar":"delete","Actualizar":"upload","Leer":"select","Libro":"book","Capitulo":"chapter","Parrafo":"paragraph"}'
     property var jsonActions: JSON.parse(stringActions)
+
     Text{
         id:_title
         text:qsTr("Realizar \n acción")
@@ -81,6 +82,7 @@ Item {
             visible: false
             displayText:"Parrafo"
             onActivated: {
+                _action.title="Parrafo "+listParagraph.currentText
                 textParagraph.visible=true
                 buttonCancelSend.visible=true
                 buttonSend.visible=true
@@ -117,7 +119,12 @@ Item {
             visible: false
             onClicked: {
                 stringSplit=_action.title.split(' ')
-                resultJson['action']+='/'+jsonActions[stringSplit[1]]+'/'+jsonActions[stringSplit[0]]
+                //console.log(jsonActions[stringSplit[0]]+'-'+jsonActions[stringSplit[1]])
+
+                //if(stringSplit[0]!=='Parrafo'){
+                    //resultJson['action']+='/'+jsonActions[stringSplit[1]]+'/'+jsonActions[stringSplit[0]]
+                    resultJson['action'][jsonActions[stringSplit[0]]]=jsonActions[stringSplit[1]]
+                //}
                 if(stringSplit[0]==='Libro'){
                     bookBuffer=_action.text
                 }
@@ -138,8 +145,14 @@ Item {
                 buttonCancelSend.visible=false
                 buttonSend.visible=false
                 _action.text=''
-
+                console.log(resultJson['action']['book']+'/'+resultJson['action']['chapter']+'/'+resultJson['action']['paragraph'])
+                if(jsonActions[stringSplit[1]]==='delete'){
+                    console.log(resultJson['action'])
+                    console.log(resultJson['section']['book']+' / '+resultJson['section']['chapter']+' / '+resultJson['section']['paragraph'])
+                    console.log('Esta seguro de eliminarlo?')
+                }
                 if(textParagraph.text.length>0){
+                    console.log(resultJson['action'])
                     console.log(resultJson['section']['book'])
                     textParagraph.visible=false
                     listChapter.visible=false
