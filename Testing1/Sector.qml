@@ -24,7 +24,7 @@ Item {
         id:_title
         text:qsTr("Realizar \n acción")
         color:"black"
-        width: parent.width
+        //width: parent.width
         horizontalAlignment: Text.AlignHCenter
         font.family: "Montserrat Light"
         font.pointSize: 40
@@ -40,7 +40,6 @@ Item {
             model: ["Adicionar","Eliminar","Actualizar","Leer"]
 
             onActivated:{
-                //sendData ("Libro "+comboboxBook.currentText)
                 _action.title="Libro "+comboboxBook.currentText
                 if(comboboxBook.currentText=="Adicionar"){
                     statusChapter=true
@@ -48,7 +47,6 @@ Item {
                 }
                 if(comboboxBook.currentText=="Actualizar"){
                     statusChapter=true
-                    //listChapter.visible=true
                     listChapter.model=["Adicionar","Eliminar","Actualizar","Leer"]
                 }
                 _action.visible=true
@@ -91,8 +89,13 @@ Item {
             visible: false
             background: Rectangle{
                 id:_backgroundTextInput
+                implicitWidth: 250
+                implicitHeight: 150
                 border.color: "black"
             }
+            /*width: 50
+            height: 50*/
+            //contentWidth: 30
         }
         LInput{
             id:_action
@@ -104,7 +107,6 @@ Item {
             text:"Cancelar"
             visible: false
             onClicked: {
-                //back()
                 buttonCancelSend.visible=false
                 buttonSend.visible=false
             }
@@ -117,37 +119,32 @@ Item {
             onClicked: {
                 if(_action.title=="Libro Adicionar"){
                     resultJson['action']+='/add/book'
-                    bookBuffer=actionList
                 }
                 if(_action.title=="Libro Eliminar"){
-                    resultJson['action']+='/delete/book'
-                    bookBuffer=actionList
+                    resultJson['action']='/delete/book'
                 }
                 if(_action.title=="Libro Actualizar"){
                     resultJson['action']+='/upload/book'
-                    bookBuffer=actionList
                 }
                 if(_action.title=="Libro Leer"){
                     resultJson['action']+='/select/book'
-                    bookBuffer=actionList
                 }
 
                 if(_action.title=="Capitulo Adicionar"){
                     resultJson['action']+='/add/chapter'
-                    chapterBuffer=actionList
                 }
                 if(_action.title=="Capitulo Eliminar"){
                     resultJson['action']+='/add/chapter'
-                    chapterBuffer=actionList
                 }
                 if(_action.title=="Capitulo Actualizar"){
                     resultJson['action']+='/upload/chapter'
-                    chapterBuffer=actionList
                 }
                 if(_action.title=="Capitulo Leer"){
                     resultJson['action']+='/select/chapter'
-                    chapterBuffer=actionList
                 }
+
+                bookBuffer=actionList
+                chapterBuffer=actionList
 
                 if(statusChapter){
                     listChapter.visible=true
@@ -162,7 +159,7 @@ Item {
                 buttonCancelSend.visible=false
                 buttonSend.visible=false
                 _action.text=''
-                //console.log(textParagraph.text.length)
+
                 if(textParagraph.text.length>0){
                     console.log(resultJson['section']['paragraph'])
                     textParagraph.visible=false
