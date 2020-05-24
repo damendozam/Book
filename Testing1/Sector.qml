@@ -12,7 +12,6 @@ Item {
     function reciveResult(dataIn){
         console.log(dataIn)
     }*/
-    property string actionList: ''
     property string bookBuffer: ''
     property string chapterBuffer: ''
     property string paragraphBuffer: ''
@@ -20,6 +19,9 @@ Item {
     property bool statusParagraph: false
     property var resultString: '{"action":"","section":{"book":"","chapter":"","paragraph":""}}'
     property var resultJson: JSON.parse(resultString);
+    property var stringSplit: ['','']
+    property var stringActions: '{"Adicionar":"add","Eliminar":"delete","Actualizar":"upload","Leer":"select","Libro":"book","Capitulo":"chapter"}'
+    property var jsonActions: JSON.parse(stringActions)
     Text{
         id:_title
         text:qsTr("Realizar \n acción")
@@ -93,9 +95,6 @@ Item {
                 implicitHeight: 150
                 border.color: "black"
             }
-            /*width: 50
-            height: 50*/
-            //contentWidth: 30
         }
         LInput{
             id:_action
@@ -117,34 +116,14 @@ Item {
             text:"Aceptar"
             visible: false
             onClicked: {
-                if(_action.title=="Libro Adicionar"){
-                    resultJson['action']+='/add/book'
+                stringSplit=_action.title.split(' ')
+                resultJson['action']+='/'+jsonActions[stringSplit[1]]+'/'+jsonActions[stringSplit[0]]
+                if(stringSplit[0]==='Libro'){
+                    bookBuffer=_action.text
                 }
-                if(_action.title=="Libro Eliminar"){
-                    resultJson['action']='/delete/book'
+                if(stringSplit[0]==='Capitulo'){
+                    chapterBuffer=_action.text
                 }
-                if(_action.title=="Libro Actualizar"){
-                    resultJson['action']+='/upload/book'
-                }
-                if(_action.title=="Libro Leer"){
-                    resultJson['action']+='/select/book'
-                }
-
-                if(_action.title=="Capitulo Adicionar"){
-                    resultJson['action']+='/add/chapter'
-                }
-                if(_action.title=="Capitulo Eliminar"){
-                    resultJson['action']+='/add/chapter'
-                }
-                if(_action.title=="Capitulo Actualizar"){
-                    resultJson['action']+='/upload/chapter'
-                }
-                if(_action.title=="Capitulo Leer"){
-                    resultJson['action']+='/select/chapter'
-                }
-
-                bookBuffer=actionList
-                chapterBuffer=actionList
 
                 if(statusChapter){
                     listChapter.visible=true
@@ -153,7 +132,7 @@ Item {
                     listParagraph.visible=true
                 }
                 resultJson['section']['book']=bookBuffer
-                resultJson['section']['chapter']=actionList
+                resultJson['section']['chapter']=chapterBuffer
                 resultJson['section']['paragraph']=textParagraph.text
                 _action.visible=false
                 buttonCancelSend.visible=false
@@ -161,7 +140,7 @@ Item {
                 _action.text=''
 
                 if(textParagraph.text.length>0){
-                    console.log(resultJson['section']['paragraph'])
+                    console.log(resultJson['section']['book'])
                     textParagraph.visible=false
                     listChapter.visible=false
                     listParagraph.visible=false
