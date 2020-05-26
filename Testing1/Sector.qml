@@ -20,7 +20,7 @@ Item {
     property var resultString: '{"action":{"book":"","chapter":"","paragraph":""},"section":{"book":"","chapter":"","paragraph":""}}'
     property var resultJson: JSON.parse(resultString);
     property var stringSplit: ['','']
-    property var stringActions: '{"Adicionar":"add","Eliminar":"delete","Actualizar":"upload","Leer":"select","Libro":"book","Capitulo":"chapter","Parrafo":"paragraph"}'
+    property var stringActions: '{"Adicionar":"add/","Eliminar":"delete/","Actualizar":"upload/","Leer":"select/","Libro":"book","Capitulo":"chapter","Parrafo":"paragraph"}'
     property var jsonActions: JSON.parse(stringActions)
 
     Text{
@@ -88,14 +88,22 @@ Item {
                 buttonSend.visible=true
             }
         }
-        TextArea{
+        ScrollView{
             id:textParagraph
             visible: false
-            background: Rectangle{
-                id:_backgroundTextInput
-                implicitWidth: 250
-                implicitHeight: 150
-                border.color: "black"
+            Layout.alignment: Qt.AlignHCenter
+            width: 250
+            height: 150
+            TextField{
+                id:textParagraph_
+                color: "black"
+                text: " "
+                placeholderText: "                                           "
+                background: Rectangle{
+                    id:_backgroundTextInput
+                    border.color: "black"
+                }
+                wrapMode: TextArea.Wrap
             }
         }
         LInput{
@@ -119,12 +127,9 @@ Item {
             visible: false
             onClicked: {
                 stringSplit=_action.title.split(' ')
-                //console.log(jsonActions[stringSplit[0]]+'-'+jsonActions[stringSplit[1]])
 
-                //if(stringSplit[0]!=='Parrafo'){
-                    //resultJson['action']+='/'+jsonActions[stringSplit[1]]+'/'+jsonActions[stringSplit[0]]
-                    resultJson['action'][jsonActions[stringSplit[0]]]=jsonActions[stringSplit[1]]
-                //}
+                resultJson['action'][jsonActions[stringSplit[0]]]=jsonActions[stringSplit[1]]
+
                 if(stringSplit[0]==='Libro'){
                     bookBuffer=_action.text
                 }
@@ -145,19 +150,20 @@ Item {
                 buttonCancelSend.visible=false
                 buttonSend.visible=false
                 _action.text=''
-                console.log(resultJson['action']['book']+'/'+resultJson['action']['chapter']+'/'+resultJson['action']['paragraph'])
-                if(jsonActions[stringSplit[1]]==='delete'){
+                console.log(resultJson['action']['book']+resultJson['action']['chapter']+resultJson['action']['paragraph'])
+                if(jsonActions[stringSplit[1]]==='delete/'){
+                    resultJson['section']['paragraph']=" "
                     console.log(resultJson['action'])
                     console.log(resultJson['section']['book']+' / '+resultJson['section']['chapter']+' / '+resultJson['section']['paragraph'])
                     console.log('Esta seguro de eliminarlo?')
                 }
-                if(textParagraph.text.length>0){
-                    console.log(resultJson['action'])
+                if(textParagraph_.text.length>0){
+                    //console.log(resultJson['action'])
                     console.log(resultJson['section']['book'])
                     textParagraph.visible=false
                     listChapter.visible=false
                     listParagraph.visible=false
-                    textParagraph.text=''
+                    textParagraph_.text=''
                     statusChapter=false
                     statusParagraph=false
                     resultJson['action']=''
