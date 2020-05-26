@@ -158,7 +158,6 @@ Item {
                     console.log('Esta seguro de eliminarlo?')
                 }
                 if(textParagraph_.text.length>0){
-                    //console.log(resultJson['action'])
                     console.log(resultJson['section']['book'])
                     textParagraph.visible=false
                     listChapter.visible=false
