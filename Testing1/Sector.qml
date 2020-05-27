@@ -20,7 +20,7 @@ Item {
     property var resultString: '{"action":{"book":"","chapter":"","paragraph":""},"section":{"book":"","chapter":"","paragraph":""}}'
     property var resultJson: JSON.parse(resultString);
     property var stringSplit: ['','']
-    property var stringActions: '{"Adicionar":"add/","Eliminar":"delete/","Actualizar":"upload/","Leer":"select/","Libro":"book","Capitulo":"chapter","Parrafo":"paragraph"}'
+    property var stringActions: '{"Adicionar":"add","Eliminar":"delete","Actualizar":"upload","Leer":"select","Libro":"book","Capitulo":"chapter","Parrafo":"paragraph"}'
     property var jsonActions: JSON.parse(stringActions)
 
     Text{
@@ -151,7 +151,7 @@ Item {
                 buttonSend.visible=false
                 _action.text=''
                 console.log(resultJson['action']['book']+resultJson['action']['chapter']+resultJson['action']['paragraph'])
-                if(jsonActions[stringSplit[1]]==='delete/'){
+                if(jsonActions[stringSplit[1]]==='delete'){
                     resultJson['section']['paragraph']=" "
                     console.log(resultJson['action'])
                     console.log(resultJson['section']['book']+' / '+resultJson['section']['chapter']+' / '+resultJson['section']['paragraph'])
