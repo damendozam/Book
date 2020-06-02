@@ -1,9 +1,8 @@
-var express = require('express');
-var app = express();
-var server = require('http').Server(app);
-var bodyParser=require("body-parser");
-var mysql = require('mysql')
-var myConnection = require('express-myconnection')
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const bodyParser=require("body-parser");
+var id=1;
 /*
     {
         "action": {
@@ -20,30 +19,36 @@ var myConnection = require('express-myconnection')
 */
 
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-app.use(myConnection(mysql,{
-    host: 'localhost',
-    user: 'root',
-    password:'pasword',
-    port:3306
-    database:'library'
-},'single'))
+/*app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());*/
+app.use(express.json());
+const mysqlConnection = require('./database');
 
-app.get('/', function(req, res) {
-  res.status(200).send("Hello World!");
+app.get('/', (req, res)=> {    
+    console.log(id);
+    mysqlConnection.query('select * from books2',(err,rows,fields)=>{
+        if(!err){
+            res.json(rows);
+        }
+        else{
+            console.log('Maaaaal');
+        }
+    });
 });
 
-app.post('/', function (req, res) {
+app.post('/', (req, res)=> {
     //console.log(req.body)
-    var message=req.body
+    let message=req.body
+    let actionBook=message['action']['book']
     //console.log(message['action']['book'])
-    switch(message['action']['book']){
+    switch(actionBook){
         case 'add':
-            console.log(message['section']['book'])
+            let titleObject=message['section']['book']
+            mysqlConnection.query('insert into books2 values (?,?,?)',[id++,titleObject,true]);
         break;
         case 'delete':
             console.log(message['section']['book'])
+            //mysqlConnection.query('delete drom books where id = ?',[message['section']['book']]);
         break;
         case 'upload':
             console.log(message['section']['book'])
@@ -56,6 +61,6 @@ app.post('/', function (req, res) {
 });
 
 
-server.listen(8080, function() {
+server.listen(process.env.PORT || 8080, ()=> {
   console.log("Servidor corriendo en http://localhost:8080");
 });

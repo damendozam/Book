@@ -1,5 +1,5 @@
 create database if not exists test;
-use library;
+use test;
 
 /*create table chapters(
 	id int(11) not null auto_increment,
@@ -12,3 +12,12 @@ create table books(
     primary key(id) 
 );
 describe book;
+
+
+
+/*Connection to dataBase*/
+/*
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_new_password';
+FLUSH PRIVILEGES;
+quit
+*/
