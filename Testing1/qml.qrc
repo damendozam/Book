@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>Login.qml</file>
-        <file>LButton.qml</file>
-        <file>LInput.qml</file>
-        <file>Sector.qml</file>
-    </qresource>
-</RCC>
