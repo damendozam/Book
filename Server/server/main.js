@@ -18,7 +18,7 @@ var id=1;
     }
 */
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
 /*app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());*/
 app.use(express.json());
@@ -26,7 +26,7 @@ const mysqlConnection = require('./database');
 
 app.get('/', (req, res)=> {    
     console.log(id);
-    mysqlConnection.query('select * from books2',(err,rows,fields)=>{
+    mysqlConnection.query('select * from books',(err,rows,fields)=>{
         if(!err){
             res.json(rows);
         }
@@ -44,11 +44,11 @@ app.post('/', (req, res)=> {
     switch(actionBook){
         case 'add':
             let titleObject=message['section']['book']
-            mysqlConnection.query('insert into books2 values (?,?,?)',[id++,titleObject,true]);
+            mysqlConnection.query('insert into books values (?,?)',[id++,titleObject]);
         break;
         case 'delete':
             console.log(message['section']['book'])
-            //mysqlConnection.query('delete drom books where id = ?',[message['section']['book']]);
+            mysqlConnection.query('delete from books where title = ?',[message['section']['book']]);
         break;
         case 'upload':
             console.log(message['section']['book'])

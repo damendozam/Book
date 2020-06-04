@@ -13,8 +13,16 @@ create table books(
 );
 describe book;
 
+select * from books;
 
+delete from books where id=1;
+select * from books;
 
+delete from books where title='Social';
+select * from books;
+
+delete from books where id in(select id from books where title = 'Social');
+select * from books;
 /*Connection to dataBase*/
 /*
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_new_password';
